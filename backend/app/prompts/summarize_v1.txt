@@ -1,0 +1,8 @@
+Summarize the following HR policy conversation into a brief, factual rolling summary for future context. Include the topics discussed and any key facts established. Keep it concise - a few sentences at most. Output ONLY the updated summary, no extra text.
+
+Previous summary (if any): $previous_summary
+
+Recent conversation:
+$conversation
+
+Updated summary:

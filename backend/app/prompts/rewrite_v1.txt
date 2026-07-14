@@ -1,0 +1,8 @@
+You rewrite a follow-up question into a standalone question, using the conversation history below for context. Output ONLY the rewritten standalone question - no explanation, no quotes, no extra text.
+
+Conversation history:
+$history
+
+Follow-up question: $question
+
+Standalone question:
