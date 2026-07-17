@@ -2,3 +2,9 @@
 # a CRLF-converted checkout (e.g. a Windows clone with core.autocrlf=true)
 # breaks it with "/bin/sh^M: bad interpreter" (ADR-011, docs/DEPLOYMENT.md).
 *.sh text eol=lf
+
+# Binary - never line-ending-convert (would corrupt the file). Without
+# this, git's text-detection heuristic can misjudge a PDF as text since
+# its header/structure is ASCII even though embedded streams are binary
+# (backend/seed_data/*.pdf, ADR-012 demo seed).
+*.pdf binary

@@ -1,5 +1,6 @@
-# Railway single-service deployment (ADR-011, docs/sdd.md Appendix B).
-# FastAPI serves the built SPA same-origin - see backend/app/api/spa.py.
+# Single-service container deployment (ADR-011 Railway, ADR-012 Hugging
+# Face Spaces - the current target; docs/sdd.md Appendix B). FastAPI
+# serves the built SPA same-origin - see backend/app/api/spa.py.
 
 # ---- Stage 1: build the frontend --------------------------------------
 FROM node:20-slim AS frontend-build
@@ -37,6 +38,11 @@ RUN pip install --no-cache-dir ./backend
 
 COPY backend/alembic ./backend/alembic
 COPY backend/alembic.ini ./backend/alembic.ini
+
+# Bundled demo PDF (ADR-012): re-ingested on cold start when
+# SEED_DEMO_DOCUMENT=true and the tenant has no documents yet, so a
+# Hugging Face Space's ephemeral filesystem never boots into an empty demo.
+COPY backend/seed_data ./backend/seed_data
 
 COPY --from=frontend-build /app/dist ./frontend_dist
 

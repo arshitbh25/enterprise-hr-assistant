@@ -93,12 +93,17 @@ Frontend env vars are optional (see [`frontend/.env.example`](frontend/.env.exam
 
 ## Deployment
 
-Phase P9: a root `Dockerfile` builds a single Railway service (FastAPI
+Phase P9: a root `Dockerfile` builds a single-service container (FastAPI
 serves the built React SPA same-origin — ADR-011, a deliberate deviation
 from the two-service picture in [`docs/sdd.md`](docs/sdd.md) Section 9,
-which still describes local dev accurately). Exact steps, required env
-vars, and the local-verification checklist to run before every deploy
-are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+which still describes local dev accurately). **Current deployment
+target: Hugging Face Spaces** (Docker SDK, free CPU tier — ADR-012),
+chosen for its 16GB free-tier RAM; Spaces' ephemeral storage is offset by
+a startup demo-document reseed so the deployed demo is never empty.
+Railway (ADR-011) remains documented as a working alternative with real
+persistence. Exact steps, required env vars, and the local-verification
+checklist for both targets are in
+[`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ## Troubleshooting
 

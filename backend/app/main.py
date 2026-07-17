@@ -25,6 +25,7 @@ from app.core.config import Settings, get_settings
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging, get_logger
 from app.database.seed import seed_defaults
+from app.database.seed_demo import seed_demo_document
 from app.database.session import get_session_factory, init_engine
 from app.embeddings.registry import init_embedder
 from app.middleware.auth import AuthStubMiddleware
@@ -50,6 +51,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         db = get_session_factory()()
         try:
             seed_defaults(db, settings)
+            seed_demo_document(db, settings)
         except OperationalError as exc:
             raise RuntimeError(
                 "Database schema is not initialized. Run `alembic upgrade head` "
@@ -93,8 +95,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(history.router, prefix="/api/v1", tags=["history"])
     app.include_router(sessions.router, prefix="/api/v1", tags=["sessions"])
 
-    # Railway single-service deployment only (ADR-011): local dev/tests
-    # never set frontend_dist_dir, so this is a no-op everywhere else.
+    # Single-service container deployment only (ADR-011/ADR-012): local
+    # dev/tests never set frontend_dist_dir, so this is a no-op elsewhere.
     if settings.frontend_dist_dir:
         mount_spa(app, Path(settings.frontend_dist_dir))
 

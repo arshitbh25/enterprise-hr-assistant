@@ -252,6 +252,8 @@ TLS everywhere; API-key/JWT-ready auth middleware (stubbed in v1, enforced in Sa
 
 **Decision (ADR-011): single-service Railway deployment, not the two-Dockerfile/`docker-compose` picture above.** Section 9's folder structure and this section's `docker-compose` bullet describe the *local-dev* topology (independent frontend/backend processes, unchanged by this decision). For the actual free/hobby-tier Railway deployment, the root `Dockerfile` builds the React SPA in a stage and has FastAPI serve it directly (`app/api/spa.py`, mounted only when `FRONTEND_DIST_DIR` is set) — one always-on service instead of two, no cross-service CORS or service-discovery wiring, same-origin by construction. Full runbook: `docs/DEPLOYMENT.md`. The two-service shape remains the natural next step if this ever needs independent frontend/backend scaling.
 
+**Decision (ADR-012): Hugging Face Spaces (Docker SDK, free CPU tier) is the actual deployed target, superseding ADR-011 in practice.** The same root `Dockerfile`/single-service design carries over unchanged — only the hosting platform changes. Rationale: Spaces' free tier gives 16GB RAM, comfortably fitting this image (torch + transformers + chromadb) at zero cost; a Render free tier (512MB) cannot run it at all. The accepted trade-off is Spaces' **ephemeral** storage — the container filesystem resets on every restart/rebuild, so there is no mounted-volume equivalent to Railway's `/data` and no cross-restart persistence for anything a visitor uploads live. This is mitigated, not solved, by `app/database/seed_demo.py`: a bundled sample PDF re-ingests itself on every cold start (gated behind `SEED_DEMO_DOCUMENT`, default off) if the tenant has no documents yet, so the deployed demo is never in an empty state. Railway's ADR-011 runbook stays documented in `docs/DEPLOYMENT.md` as a working alternative with real persistence, for a future move off the free tier. Full runbook: `docs/DEPLOYMENT.md`.
+
 ---
 
 ## 4. Architecture Selection & Trade-off Analysis
@@ -935,5 +937,6 @@ Illustrative 10-week plan (starting week of 2026-07-19), grouped into four track
 | ADR-008 | Prompts as versioned files | Reviewable, testable prompt changes |
 | ADR-009 | Ports & adapters for LLM/vector/storage | Vendor and tier swaps are config-level changes |
 | ADR-011 | Single-service Railway deployment (FastAPI serves the built SPA) | Free/hobby-tier portfolio deployment; see Section 3.7 note below |
+| ADR-012 | Hugging Face Spaces (Docker SDK, free CPU tier) over Railway/Render | 16GB RAM fits the ML image free; Render free (512MB) cannot run it; ephemeral storage mitigated by demo seeding |
 
 *End of Software Design Document v1.0 — ready for engineering review and Phase 1 kickoff.*

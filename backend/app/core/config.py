@@ -148,12 +148,19 @@ class Settings(BaseSettings):
     default_user_email: str = "admin@example.com"
     default_user_display_name: str = "Default Admin"
 
-    # --- Static frontend serving (Railway single-service deployment,
-    # ADR-011) --- Empty in local dev/tests, where the frontend runs on
-    # its own Vite dev server via the proxy in vite.config.ts. The
+    # --- Static frontend serving (single-service container deployment,
+    # ADR-011/ADR-012) --- Empty in local dev/tests, where the frontend
+    # runs on its own Vite dev server via the proxy in vite.config.ts. The
     # Dockerfile's runtime image sets this so app/api/spa.py mounts the
     # built SPA and FastAPI serves it same-origin.
     frontend_dist_dir: str = ""
+
+    # --- Demo document seeding (Hugging Face Spaces, ADR-012) --- Spaces'
+    # free tier has ephemeral storage (the filesystem resets on every
+    # restart/rebuild), so the deployed demo re-seeds a bundled sample PDF
+    # on every cold start if the tenant has no documents yet. False by
+    # default so local dev/tests are unaffected; the Space sets this true.
+    seed_demo_document: bool = False
 
     @property
     def cors_origins_list(self) -> list[str]:
