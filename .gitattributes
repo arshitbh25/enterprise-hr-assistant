@@ -1,0 +1,4 @@
+# entrypoint.sh runs as a Linux container's ENTRYPOINT via its shebang -
+# a CRLF-converted checkout (e.g. a Windows clone with core.autocrlf=true)
+# breaks it with "/bin/sh^M: bad interpreter" (ADR-011, docs/DEPLOYMENT.md).
+*.sh text eol=lf

@@ -1,0 +1,35 @@
+# Environments
+**/.venv/
+**/venv/
+**/node_modules/
+
+# Build output (frontend/dist is rebuilt by stage 1; nothing else ships one)
+**/dist/
+
+# Runtime data / secrets - never bake these into an image
+backend/data/
+**/.env
+*.db
+*.sqlite3
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/*.egg-info/
+**/.eggs/
+**/.pytest_cache/
+**/.coverage
+**/htmlcov/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Tests - not needed in the runtime image
+backend/tests/
+
+# VCS / editor / OS
+.git/
+.claude/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

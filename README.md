@@ -91,6 +91,15 @@ Backend config is entirely `pydantic-settings`-driven — see [`backend/.env.exa
 
 Frontend env vars are optional (see [`frontend/.env.example`](frontend/.env.example)): `VITE_API_BASE_URL` for a non-proxied deployment, and `VITE_MAX_FILE_MB`/`VITE_MAX_FILES` for client-side upload pre-checks, which should match the backend's own limits.
 
+## Deployment
+
+Phase P9: a root `Dockerfile` builds a single Railway service (FastAPI
+serves the built React SPA same-origin — ADR-011, a deliberate deviation
+from the two-service picture in [`docs/sdd.md`](docs/sdd.md) Section 9,
+which still describes local dev accurately). Exact steps, required env
+vars, and the local-verification checklist to run before every deploy
+are in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
 ## Troubleshooting
 
 **Chat generation fails with a 404 from Gemini.** The model in `GEMINI_MODEL_NAME` has most likely been retired — Google periodically deprecates older Gemini model names. List the models your API key currently has access to and update `GEMINI_MODEL_NAME` in `.env` accordingly:

@@ -148,6 +148,13 @@ class Settings(BaseSettings):
     default_user_email: str = "admin@example.com"
     default_user_display_name: str = "Default Admin"
 
+    # --- Static frontend serving (Railway single-service deployment,
+    # ADR-011) --- Empty in local dev/tests, where the frontend runs on
+    # its own Vite dev server via the proxy in vite.config.ts. The
+    # Dockerfile's runtime image sets this so app/api/spa.py mounts the
+    # built SPA and FastAPI serves it same-origin.
+    frontend_dist_dir: str = ""
+
     @property
     def cors_origins_list(self) -> list[str]:
         """Parsed CORS_ORIGINS: comma-separated string -> list of origins."""

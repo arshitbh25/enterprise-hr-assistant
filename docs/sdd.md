@@ -250,6 +250,8 @@ TLS everywhere; API-key/JWT-ready auth middleware (stubbed in v1, enforced in Sa
 - Zero-downtime deploys via platform rolling restarts; DB migrations (Alembic) run as a release step.
 - Rollback = redeploy previous image tag.
 
+**Decision (ADR-011): single-service Railway deployment, not the two-Dockerfile/`docker-compose` picture above.** Section 9's folder structure and this section's `docker-compose` bullet describe the *local-dev* topology (independent frontend/backend processes, unchanged by this decision). For the actual free/hobby-tier Railway deployment, the root `Dockerfile` builds the React SPA in a stage and has FastAPI serve it directly (`app/api/spa.py`, mounted only when `FRONTEND_DIST_DIR` is set) — one always-on service instead of two, no cross-service CORS or service-discovery wiring, same-origin by construction. Full runbook: `docs/DEPLOYMENT.md`. The two-service shape remains the natural next step if this ever needs independent frontend/backend scaling.
+
 ---
 
 ## 4. Architecture Selection & Trade-off Analysis
@@ -932,5 +934,6 @@ Illustrative 10-week plan (starting week of 2026-07-19), grouped into four track
 | ADR-007 | `tenant_id` threaded through all storage from day one | SaaS optionality without retrofit |
 | ADR-008 | Prompts as versioned files | Reviewable, testable prompt changes |
 | ADR-009 | Ports & adapters for LLM/vector/storage | Vendor and tier swaps are config-level changes |
+| ADR-011 | Single-service Railway deployment (FastAPI serves the built SPA) | Free/hobby-tier portfolio deployment; see Section 3.7 note below |
 
 *End of Software Design Document v1.0 — ready for engineering review and Phase 1 kickoff.*

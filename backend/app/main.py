@@ -11,6 +11,7 @@ first request.
 
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +19,7 @@ from sqlalchemy.exc import OperationalError
 
 from app.agents.memory import init_summarize_template
 from app.agents.query_understanding import init_rewrite_template
+from app.api.spa import mount_spa
 from app.api.v1 import chat, documents, health, history, sessions, upload
 from app.core.config import Settings, get_settings
 from app.core.exceptions import register_exception_handlers
@@ -90,5 +92,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
     app.include_router(history.router, prefix="/api/v1", tags=["history"])
     app.include_router(sessions.router, prefix="/api/v1", tags=["sessions"])
+
+    # Railway single-service deployment only (ADR-011): local dev/tests
+    # never set frontend_dist_dir, so this is a no-op everywhere else.
+    if settings.frontend_dist_dir:
+        mount_spa(app, Path(settings.frontend_dist_dir))
 
     return app
