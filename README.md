@@ -1,5 +1,21 @@
 # Enterprise HR Policy AI Assistant
 
+## 🚀 Live Demo
+
+**[Try it here → enterprise-hr-assistant-production.up.railway.app](https://enterprise-hr-assistant-production.up.railway.app)**
+
+A sample HR policy handbook is pre-loaded — ask questions like:
+- *"Can I claim internet reimbursement while on WFH?"*
+- *"How many days do I have to submit an expense claim?"*
+
+Answers are grounded in the document with expandable, page-level citations.
+First response after an idle period may take a little longer (demo document
+re-seeds on cold start; LLM responses take ~20–30s).
+
+> **Deployment note:** originally targeted Hugging Face Spaces (ADR-012);
+> pivoted to Railway (ADR-011) in July 2026 when HF moved Docker Spaces
+> behind a paid tier. See `docs/DEPLOYMENT.md`.
+
 An **Agentic RAG** chatbot that answers employee HR-policy questions strictly from a company's own uploaded policy PDFs — every answer is grounded, cited (document + page), and the system refuses rather than guesses when it isn't confident. Employees get instant, consistent answers instead of a support-ticket queue; HR gets an audit trail of every question the bot did and didn't answer.
 
 Full design rationale, trade-off analysis, and API/DB specs live in [`docs/sdd.md`](docs/sdd.md) — that document is the source of truth this codebase was built against. This README is the "how do I run it" companion.
